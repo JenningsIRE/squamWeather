@@ -58,7 +58,7 @@
 
     // Convert to CSV string
   const csvContent = results.map(row =>
-    row.dates.map(field => `${row.name.replace(',', ' ')},${row.grade},"${field.replace(/"/g, '""')}"`).join('\n')
+    row.dates.map(field => `${row.name.replaceAll(',', ' ')},${row.grade},"${field.replace(/"/g, '""')}"`).join('\n')
   ).join('\n');
 
   // Trigger download

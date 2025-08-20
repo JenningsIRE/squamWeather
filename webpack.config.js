@@ -2,27 +2,42 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: './src/index.js',
+  mode: 'development',
+  entry: './src/index.tsx',
   output: {
+    filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.[contenthash].js',
     clean: true,
+  },
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
   },
   module: {
     rules: [
       {
-        test: /\.jsx?$/, // js or jsx
+        test: /\.[jt]sx?$/,
         exclude: /node_modules/,
-        use: 'babel-loader',
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                '@babel/preset-env',
+                '@babel/preset-react',
+                '@babel/preset-typescript',
+              ],
+            },
+          },
+          {
+            loader: 'ts-loader',
+          },
+        ],
       },
       {
-        test: /\.css$/i,
-        use: ['style-loader', 'css-loader'], // for CSS files
-      },
+        test: /\.(png|jpe?g|gif|svg)$/i,
+        type: 'asset/resource',
+      }
     ],
-  },
-  resolve: {
-    extensions: ['.js', '.jsx'], // allow imports without extension
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -31,9 +46,7 @@ module.exports = {
   ],
   devServer: {
     static: './dist',
-    port: 3000,
     hot: true,
-    open: true,
+    port: 3000,
   },
-  mode: 'development',
 };
